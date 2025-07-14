@@ -1,0 +1,15 @@
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+// https://vite.dev/config/
+export default defineConfig({
+  base: './', //设置项目根路径为'./'or'/'
+  server: {
+    open: true,//自动打开浏览器
+    port: 8080,//设置端口号
+    host: '0.0.0.0',//监听所有地址
+    cors: true,// 允许跨域
+    proxy: {},// 自定义代理规则
+  },
+  plugins: [vue()],
+})
