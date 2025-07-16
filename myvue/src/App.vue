@@ -1,5 +1,6 @@
 <template>
-  <RouterView v-if="ready"></RouterView>
+	<!-- <RouterView v-if="ready"></RouterView> -->
+	<router-view />
 </template>
 
 
