@@ -1,43 +1,71 @@
 <template>
-    <form class="search-form" @submit.prevent="handleSearch">
-        <el-input v-model="searchKeyword" class="search-input" placeholder="搜索" autocomplete="off" clearable
-            @keyup.enter="handleSearch">
-            <template #suffix>
-                <!-- 搜索引擎选择按钮 -->
-                <el-dropdown trigger="click" class="engine-dropdown">
-                    <button type="button" class="engine-btn">
-                        <span class="engine-icon"><img src="../assets/img/baidu.png" class="engine-icon-img"
-                                alt="搜索引擎图标"></span>
-                    </button>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item @click="selectEngine('baidu')">
-                                <span class="engine-item">百度</span>
-                            </el-dropdown-item>
-                            <el-dropdown-item @click="selectEngine('google')">
-                                <span class="engine-item">谷歌</span>
-                            </el-dropdown-item>
-                            <el-dropdown-item @click="selectEngine('bing')">
-                                <span class="engine-item">必应</span>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
+    <div class="page-container">
+        <MouseMoveCanvas></MouseMoveCanvas>
+        <p class="time">{{ nowTime }}</p>
+        <form class="search-form" @submit.prevent="handleSearch">
+            <el-input v-model="searchKeyword" class="search-input" placeholder="搜索" autocomplete="off"
+                :clearable="false" @keyup.enter="handleSearch">
+                <template #suffix>
+                    <!-- 搜索引擎选择按钮 -->
+                    <el-dropdown trigger="click" class="engine-dropdown">
+                        <el-button type="button" class="engine-btn">
+                            <span class="engine-icon"><img src="../assets/img/baidu.png" class="engine-icon-img"
+                                    alt="搜索引擎图标"></span>
+                        </el-button>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item @click="selectEngine('baidu')">
+                                    <span class="engine-item">百度</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="selectEngine('google')">
+                                    <span class="engine-item">谷歌</span>
+                                </el-dropdown-item>
+                                <el-dropdown-item @click="selectEngine('bing')">
+                                    <span class="engine-item">必应</span>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
 
-                <!-- 搜索提交按钮 -->
-                <button type="submit" class="search-btn">
-                    <el-icon class="search-icon">
-                        <Search />
-                    </el-icon>
-                </button>
-            </template>
-        </el-input>
-    </form>
+                    <!-- 搜索提交按钮 -->
+                    <el-button type="submit" class="search-btn">
+                        <el-icon class="search-icon">
+                            <Search />
+                        </el-icon>
+                    </el-button>
+
+                </template>
+            </el-input>
+        </form>
+        <BottomBar></BottomBar>
+    </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { Search } from '@element-plus/icons-vue';
+import MouseMoveCanvas from '../components/MouseMoveCanvas.vue';
+import BottomBar from '../components/BottomBar.vue';
+
+const nowTime = ref('');
+const getTime = () => {
+    const updateTime = () => {
+        const now = new Date()
+        const hours = String(now.getHours()).padStart(2, '0')
+        const minutes = String(now.getMinutes()).padStart(2, '0')
+        nowTime.value = `${hours}:${minutes}`
+    }
+    updateTime()
+    const timer = setInterval(updateTime, 1000)
+    return () => clearInterval(timer)
+}
+
+onMounted(() => {
+    const cleanup = getTime()
+
+    // 组件卸载时清理定时器
+    onBeforeUnmount(cleanup)
+})
 
 const searchKeyword = ref('');
 const currentEngine = ref('baidu');
@@ -59,48 +87,43 @@ const handleEngineChange = (engine) => {
 </script>
 
 <style scoped>
-.search-form {
-    display: flex;
-    justify-content: center;
-    margin-top: -100px;
-}
-.search-container {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
+.page-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../assets/img/indexBackground.jpg');
+    background-size: cover;
+    /* z-index: 10000; */
 }
 
+.time {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 42px;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.search-form {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+}
+
+
 .search-input {
-    width: 600px;
+    width: 100%;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
     border-radius: 24px;
     overflow: hidden;
 }
-
-
-:deep(.el-input-group__prepend) {
-    padding: 0;
-    border: none;
-    background: transparent;
-}
-
-:deep(.el-input-group__append) {
-    padding: 0;
-    border: none;
-    background: transparent;
-}
-
-/* 引擎下拉按钮样式 */
-/* .engine-btn {
-  width: 60px;
-  height: 40px;
-  padding: 0;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-} */
 
 /* 引擎下拉按钮样式 */
 .engine-btn {
@@ -119,19 +142,6 @@ const handleEngineChange = (engine) => {
     /* 圆形按钮 */
 }
 
-/* .engine-icon {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 16px;
-  color: #2932e1;
-  background: #f1f1f1;
-  border-radius: 4px;
-} */
-
 .engine-icon {
     display: flex;
     width: 24px;
@@ -139,13 +149,14 @@ const handleEngineChange = (engine) => {
     border-radius: 50%;
     /* 圆形图标 */
     overflow: hidden;
-    background: transparent;
 }
 
 
 
 .engine-icon-img {
-    width: 24px;
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
 }
 
 .engine-item {
@@ -154,12 +165,12 @@ const handleEngineChange = (engine) => {
 
 /* 搜索按钮样式 */
 .search-btn {
+    display: flex;
     width: 60px;
     height: 40px;
     padding: 0;
     background: #409eff;
     border-radius: 0 24px 24px 0;
-    display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
@@ -181,7 +192,7 @@ const handleEngineChange = (engine) => {
     display: flex;
     border: none;
     box-shadow: none !important;
-    padding: 0 0 0 20px; 
+    padding: 0 0 0 20px;
     height: 40px;
     align-items: center;
 }
@@ -189,6 +200,5 @@ const handleEngineChange = (engine) => {
 :deep(.el-input__suffix) {
     display: flex;
     align-items: center;
-    padding-right: 0px;
 }
 </style>

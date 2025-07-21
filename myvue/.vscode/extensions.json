@@ -1,3 +1,7 @@
 {
-  "recommendations": ["Vue.volar"]
+  "recommendations": [
+    "Vue.volar"
+  ],
+  "vue-official.takeOverMode.enabled": true,
+  "vue-official.experimental.templateInterpolationService": true
 }

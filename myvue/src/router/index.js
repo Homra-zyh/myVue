@@ -21,21 +21,21 @@ const router = createRouter({//创建路由实例
             component: () => import('../views/Settings.vue'),
         },
         {//测试使用
-            path: '/mouse',
-            name: 'mouse',
+            path:'/bottom',
+            name: 'bottom',
             meta: {
-                title: '鼠标'
+                title: '底部',
             },
-            component: () => import('../components/MousePlace.vue'),
+            component: () => import('../components/BottomBar.vue'),
         },
         {//测试使用
-            path: '/mouse2',
-            name: 'mouse2',
+            path:'/test',
+            name: 'test',
             meta: {
-                title: '鼠标2'
+                title: '测试',
             },
-            component: () => import('../components/MouseMoveCanvas.vue'),
-        },
+            component: () => import('../views/test.vue'),
+        }
     ]
 })
 

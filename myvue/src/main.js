@@ -5,7 +5,7 @@ import router from './router/index.js'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
-import ElementPlus from 'element-plus'
+//import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
 import MouseClickEffects from './directives/MouseClickEffects.js'
@@ -18,8 +18,8 @@ pinia.use(piniaPluginPersistedstate);
 
 app.use(router)
 app.use(pinia)
-app.use(ElementPlus)
-app.use(MouseClickEffectsPluginWrapper)
+//app.use(ElementPlus)
+app.use(MouseClickEffectsPluginWrapper)//
 app.directive("click-effect", MouseClickEffects);//注册鼠标响应指令
 
 app.mount('#app')

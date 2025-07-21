@@ -1,0 +1,4 @@
+{
+    "vue-official.takeOverMode.enabled": true,
+    "vue-official.experimental.templateInterpolationService": true
+}
